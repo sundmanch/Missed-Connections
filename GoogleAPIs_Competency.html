@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>Google API Competency</title>
+    <link href="styles/ckwile.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?AIzaSyCUJVOHfKgbO0ujjOS4-Ug51zSgiyCMJE8
+&sensor=false"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://use.edgefonts.net/merriweather.js"></script>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+	  .map-description{
+	  	z-index:999999;
+	  	position:absolute;
+      	bottom:65px;
+      	right:20px;
+	  	width:420px;
+	  	background:url(images/bg_trans.png);
+	  	padding:10px;
+	  	color:#ECECEC;
+	  	font-size:11pt;
+	  	display: none;
+	  }
+	  .map-description a{ color:#0FC; text-decoration:none;}
+	  .map-description a:hover{ color:#03C; text-decoration:none;}
+	  :focus{outline: 0;}
+	  #hideshow{
+	  	position:absolute;
+	  	bottom:40px;
+	  	right:20px;
+	  	color:#0FC;
+	  	text-decoration:none;
+	  }
+    </style>
+    <div id="header">
+    <h1>Christina Wile</h1>
+    <p>Geospatial Analyst & Cartographer  </p>
+    <ul>
+		<li><a href="index.html">Home</a></li>
+		<li><a href="about.html">About</a></li>
+		<!--<li><a href="maps.html">Maps</a></li> -->
+		<li><a href="contact.html">Contact</a></li>
+    </ul>
+    </div>
+</head>
+    
+<body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+    <div class="map-description">
+	  <p>Data was obtained from: <a href="http://humboldt.craigslist.org/mis/" target="new">Humboldt County Missed Connections</a></p>
+      <p> Missed Connections are taken from the Personals section of Humboldt County's Craigslist page from January 8, 2013 to March 18, 2013. </p>
+	  <p>Posts with geographic data were geocoded and entered into a Google Fusion Table. The Fusion Table data was symbolized using Google Maps API v.3 </p>
+      <p> Click on points to see more information.  Zoom and pan to see Missed Connections all over Humboldt County.</p>	
+	  </div>
+    <a href="#" id="hideshow">Hide Description</a>
+    <script type="text/javascript">
+
+	//Toggle Hide and Show Options on Map Desctiption
+	$('#hideshow').toggle(function() {
+		$('#hideshow').text('Show Description');
+		$('.map-description').hide();
+	}, function() { 
+		$('#hideshow').text('Hide Description');
+		$('.map-description').show();
+	});
+
+
+	function initialize() {
+	  // Create an array of styles.
+	  var styles = [
+	{
+		featureType: "administrative",
+		elementType: "all",
+		stylers: [
+		{ saturation: -100 }
+		]
+	},{
+	featureType: "landscape",
+	elementType: "all",
+	stylers: [
+	{ saturation: -100 }
+	]
+	},{
+	featureType: "poi",
+	elementType: "all",
+	stylers: [
+	{ saturation: -100 }
+	]
+	},{
+	featureType: "road",
+	elementType: "all",
+	stylers: [
+	{ saturation: -100 }
+	]
+	},{
+	featureType: "transit",
+	elementType: "all",
+	stylers: [
+	{ saturation: -100 }
+	]
+	},{
+	featureType: "water",
+	elementType: "all",
+	stylers: [
+	{ saturation: -100 }
+	 ] 
+	}
+];
+
+	  // Create a new StyledMapType object, passing it the array of styles,
+	  // as well as the name to be displayed on the map type control.
+	  var styledMap = new google.maps.StyledMapType(styles,
+		{name: "Styled Map"});
+
+	  // Create a map object, and include the MapTypeId to add
+	  // to the map type control.
+	  var mapOptions = {
+		center: new google.maps.LatLng(40.839269, -124.06414),zoom: 12,
+		mapTypeControlOptions: {
+		  mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+		}
+	  };
+	  
+	  map = new google.maps.Map(document.getElementById('map_canvas'),
+		mapOptions);
+		
+	  //Associate the styled map with the MapTypeId and set it to display.
+	  map.mapTypes.set('map_style', styledMap);
+	  map.setMapTypeId('map_style');
+
+	  //Calling on Fusion Tables Layer	
+	  layer = new google.maps.FusionTablesLayer({
+		query: {
+		  select: 'Lat',
+		  from: '1hkvKgJ9hpb8H6vQvJclMKPdLiJDk3PzPYFoTFFM'
+		},
+	  });
+	  layer.setMap(map);
+
+	 	}
+
+	$(window).load(function(){
+		$('.map-description').fadeIn('slow');
+	});
+
+	</script>  
+</body>
+</html>
